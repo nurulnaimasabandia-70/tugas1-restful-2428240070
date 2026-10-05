@@ -1,0 +1,16 @@
+{
+  "name": "tugas1-restful-248240070",
+  "version": "1.0.0",
+  "description": "RESTful API Tugas 1 SI5B - Topik 15",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
