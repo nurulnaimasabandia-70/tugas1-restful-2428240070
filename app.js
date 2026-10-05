@@ -39,10 +39,12 @@ let shoes = [
   }
 ];
 
+// ID untuk data berikutnya
 let nextId = 4;
 
 
 // GET /
+// Menampilkan informasi API
 
 app.get("/", (req, res) => {
   res.json({
@@ -65,6 +67,9 @@ app.get("/", (req, res) => {
 
 
 // Get /shoes
+// Mengambil semua data sepatu
+// Filter berdasarkan merek
+// Contoh: /shoes?merek=Ortuseight
 
 app.get("/shoes", (req, res) => {
   const { merek } = req.query;
@@ -79,18 +84,20 @@ app.get("/shoes", (req, res) => {
     return res.status(200).json(hasil);
   }
 
+  // Jika tidak ada filter
   res.status(200).json(shoes);
 });
 
 
 // GET /shoes/:id
+// Mengambil satu data berdasarkan ID
 
 app.get("/shoes/:id", (req, res) => {
   const id = parseInt(req.params.id);
 
   const shoe = shoes.find((item) => item.id === id);
 
-
+  // Jika ID tidak ditemukan
   if (!shoe) {
     return res.status(404).json({
       status: "error",
@@ -99,11 +106,13 @@ app.get("/shoes/:id", (req, res) => {
     });
   }
 
+  // Jika ditemukan
   res.status(200).json(shoe);
 });
 
 
 // POST /shoes
+// Menambahkan data sepatu
 
 // {
 //   "namaProduk": "Sepatu Basket Pro",
@@ -122,7 +131,7 @@ app.post("/shoes", (req, res) => {
     stok
   } = req.body;
 
-
+  // Validasi field wajib
   if (
     namaProduk === undefined ||
     namaProduk === "" ||
@@ -141,7 +150,7 @@ app.post("/shoes", (req, res) => {
     });
   }
 
-  // membuat data baru
+  // Membuat data baru
   const baru = {
     id: nextId++,
     namaProduk,
@@ -151,8 +160,10 @@ app.post("/shoes", (req, res) => {
     stok
   };
 
+  // Masukkan ke array
   shoes.push(baru);
 
+  // Response berhasil
   res.status(201).json({
     status: "success",
     message: "Data sepatu berhasil ditambahkan",
@@ -161,7 +172,10 @@ app.post("/shoes", (req, res) => {
 });
 
 
+// ==================================================
 // PUT /shoes/:id
+// Mengubah seluruh data sepatu
+// ==================================================
 
 app.put("/shoes/:id", (req, res) => {
   const id = parseInt(req.params.id);
@@ -171,6 +185,7 @@ app.put("/shoes/:id", (req, res) => {
     (item) => item.id === id
   );
 
+  // Jika ID tidak ditemukan
   if (index === -1) {
     return res.status(404).json({
       status: "error",
@@ -187,6 +202,7 @@ app.put("/shoes/:id", (req, res) => {
     stok
   } = req.body;
 
+  // Validasi field wajib
   if (
     namaProduk === undefined ||
     namaProduk === "" ||
@@ -205,7 +221,7 @@ app.put("/shoes/:id", (req, res) => {
     });
   }
 
-  // data baru
+  // Data baru
   const diperbarui = {
     id: id,
     namaProduk,
@@ -215,10 +231,10 @@ app.put("/shoes/:id", (req, res) => {
     stok
   };
 
-  // mengganti data lama
+  // Mengganti data lama
   shoes[index] = diperbarui;
 
-  // response berhasil
+  // Response berhasil
   res.status(200).json({
     status: "success",
     message:
@@ -228,15 +244,20 @@ app.put("/shoes/:id", (req, res) => {
 });
 
 
+// ==================================================
 // DELETE /shoes/:id
+// Menghapus data sepatu
+// ==================================================
 
 app.delete("/shoes/:id", (req, res) => {
   const id = parseInt(req.params.id);
 
+  // Cari index data
   const index = shoes.findIndex(
     (item) => item.id === id
   );
 
+  // Jika tidak ditemukan
   if (index === -1) {
     return res.status(404).json({
       status: "error",
@@ -245,10 +266,10 @@ app.delete("/shoes/:id", (req, res) => {
     });
   }
 
-  // hapus data
+  // Hapus data
   shoes.splice(index, 1);
 
-  // response berhasil
+  // Response berhasil
   res.status(200).json({
     status: "success",
     message:
@@ -259,6 +280,7 @@ app.delete("/shoes/:id", (req, res) => {
 
 
 // CATCH-ALL 404
+// Jika endpoint tidak ditemukan
 
 app.use((req, res) => {
   res.status(404).json({
@@ -269,7 +291,7 @@ app.use((req, res) => {
 });
 
 
-// menjalankan server
+// Menjalankan server
 
 const PORT = process.env.PORT || 3000;
 
@@ -281,5 +303,5 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-// export untuk Vercel
+// Export untuk Vercel
 module.exports = app;
